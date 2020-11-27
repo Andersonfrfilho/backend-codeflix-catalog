@@ -1,0 +1,48 @@
+version: '3'
+networks:
+  network-services-connector:
+    driver: bridge
+services:
+  postgres-db:
+    container_name: postgres-db-container-codeflix
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: 102030
+      POSTGRES_USER : postgres
+      POSTGRES_DB : application_db_videos_catalog_nodejs
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - network-services-connector
+
+  backend-api:
+    working_dir: /usr/app
+    container_name: backend-api-container-codeflix
+    build:
+      context: .
+      dockerfile: Backend.Dockerfile
+    image: backend-image
+
+    command: sh -c "cd /urs/app && npm run dev:server"
+    healthcheck:
+      test: sh -c "cd /urs/app && npm run dev:server"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      DB_HOST: postgres-db
+    volumes:
+      - .:/urs/app
+    # env_file:
+    #   - vanessa-api.env
+    depends_on:
+      - postgres-db
+    # links:
+    #   - postgres-db
+    ports:
+      - '3333:3333'
+      - '9333:9333'
+    networks:
+      - network-services-connector
