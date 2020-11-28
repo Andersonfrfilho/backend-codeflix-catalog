@@ -41,7 +41,7 @@ class CastMembersRepository implements ICastMembersRepository {
   }: IPaginate): Promise<IListCastMembersDTO> {
     const [result, total] = await this.ormRepository.findAndCount({
       where: {
-        content: Raw(cast_members => `${cast_members} ILIKE '%${keyword}%'`),
+        name: Raw(cast_members => `${cast_members} ILIKE '%${keyword}%'`),
       },
       order: { created_at: order ? EOrder.DESC : EOrder.ASC },
       take,
@@ -67,7 +67,7 @@ class CastMembersRepository implements ICastMembersRepository {
     const cast_membersExist = await this.ormRepository.findOneOrFail({
       where: { id },
     });
-    await this.ormRepository.delete(cast_membersExist);
+    await this.ormRepository.delete({ id });
     return cast_membersExist;
   }
 }

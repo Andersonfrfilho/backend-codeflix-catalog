@@ -18,7 +18,7 @@ export default class CastMemberController {
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
-    const { id } = request.body;
+    const { id } = request.params;
     const showCastMember = container.resolve(ShowCastMemberService);
     const cast_member = await showCastMember.execute({ id });
     return response.json(cast_member);

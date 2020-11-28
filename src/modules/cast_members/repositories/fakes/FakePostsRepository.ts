@@ -1,19 +1,25 @@
 import { v4 as uuidv4 } from 'uuid';
-import Post from '@modules/posts/infra/typeorm/entities/Post';
-import ICreatePostDTO from '@modules/posts/dtos/ICreatePostDTO';
-import IPostsRepository from '@modules/posts/repositories/IPostsRepository';
+import CastMember from '@modules/cast_members/infra/typeorm/entities/CastMember';
+import ICreateCastMemberDTO from '@modules/cast_members/dtos/ICreateCastMemberDTO';
+import ICastMembersRepository from '@modules/cast_members/repositories/ICastMembersRepository';
 import AppError from '@shared/errors/AppError';
-import IUpdatePostDTO from '@modules/posts/dtos/IUpdatedPostDTO';
+import IUpdateCastMemberDTO from '@modules/cast_members/dtos/IUpdatedCastMemberDTO';
 import IPaginationDTO from '@shared/dtos/IPaginatedDTO';
-import IListPostsDTO from '@modules/posts/dtos/IListPostsDTO';
+import IListCastMembersDTO from '@modules/cast_members/dtos/IListCastMembersDTO';
 import Fakes from '@shared/utils';
 
-class PostsRepository implements IPostsRepository {
-  private posts: Post[] = [];
+class CastMembersRepository implements ICastMembersRepository {
+  private cast_members: CastMember[] = [];
 
-  public async findById({ id }: { id: string }): Promise<Post | undefined> {
-    const findPost = this.posts.find(post => post.id === id);
-    return findPost;
+  public async findById({
+    id,
+  }: {
+    id: string;
+  }): Promise<CastMember | undefined> {
+    const findCastMember = this.cast_members.find(
+      cast_member => cast_member.id === id,
+    );
+    return findCastMember;
   }
 
   public async list({
@@ -21,50 +27,58 @@ class PostsRepository implements IPostsRepository {
     order = true,
     take = 0,
     skip = 5,
-  }: IPaginationDTO): Promise<IListPostsDTO> {
+  }: IPaginationDTO): Promise<IListCastMembersDTO> {
     const fakePagination = new Fakes.FindAndCount({
-      array: this.posts,
+      array: this.cast_members,
       keyword,
       order,
       property: 'content',
       skip,
       take,
     });
-    const posts = fakePagination.findAndCount();
+    const cast_members = fakePagination.findAndCount();
     return {
-      total: posts.length,
-      posts,
+      total: cast_members.length,
+      cast_members,
     };
   }
 
-  public async create(postData: ICreatePostDTO): Promise<Post> {
-    const post = new Post();
-    Object.assign(post, { id: uuidv4() }, postData);
-    this.posts.push(post);
-    return post;
+  public async create(
+    cast_memberData: ICreateCastMemberDTO,
+  ): Promise<CastMember> {
+    const cast_member = new CastMember();
+    Object.assign(cast_member, { id: uuidv4() }, cast_memberData);
+    this.cast_members.push(cast_member);
+    return cast_member;
   }
 
-  public async update(postData: IUpdatePostDTO): Promise<Post | undefined> {
-    const postIndex = this.posts.findIndex(post => post.id === postData.id);
-    if (postIndex === -1) {
-      throw new AppError('Post not exist', 400);
+  public async update(
+    cast_memberData: IUpdateCastMemberDTO,
+  ): Promise<CastMember | undefined> {
+    const cast_memberIndex = this.cast_members.findIndex(
+      cast_member => cast_member.id === cast_memberData.id,
+    );
+    if (cast_memberIndex === -1) {
+      throw new AppError('CastMember not exist', 400);
     }
-    const newPost = {
-      ...this.posts[postIndex],
-      ...postData,
+    const newCastMember = {
+      ...this.cast_members[cast_memberIndex],
+      ...cast_memberData,
     };
-    this.posts[postIndex] = { ...newPost };
-    return this.posts[postIndex];
+    this.cast_members[cast_memberIndex] = { ...newCastMember };
+    return this.cast_members[cast_memberIndex];
   }
 
-  public async delete({ id }: { id: string }): Promise<Post | undefined> {
-    const postIndex = this.posts.findIndex(post => post.id === id);
-    if (postIndex === -1) {
-      throw new AppError('Post not exist', 400);
+  public async delete({ id }: { id: string }): Promise<CastMember | undefined> {
+    const cast_memberIndex = this.cast_members.findIndex(
+      cast_member => cast_member.id === id,
+    );
+    if (cast_memberIndex === -1) {
+      throw new AppError('CastMember not exist', 400);
     }
-    const post = this.posts[postIndex];
-    delete this.posts[postIndex];
-    return post;
+    const cast_member = this.cast_members[cast_memberIndex];
+    delete this.cast_members[cast_memberIndex];
+    return cast_member;
   }
 }
-export default PostsRepository;
+export default CastMembersRepository;

@@ -5,14 +5,29 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "version": "0.2.0",
+      "configurations": [
+        {
+          "type": "node",
+          "request": "attach",
+          "name": "Docker ts-node",
+          "address": "localhost",
+          "port": 9333,
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/app",
+          "protocol": "inspector"
+        }
+      ]
+    },
+    {
+      "name": "local",
       "type": "node",
       "request": "attach",
-      "name": "Docker ts-node",
-      "address": "localhost",
-      "port": 9333,
-      "localRoot": "${workspaceFolder}",
-      "remoteRoot": "/app",
-      "protocol": "inspector"
+      "protocol":"inspector",
+      "restart": true,
+      "port":9333,
+      "skipFiles": ["<node_internals>/**"],
+      "outFiles": ["${workspaceFolder}/**/*.js"]
     }
   ]
 }
