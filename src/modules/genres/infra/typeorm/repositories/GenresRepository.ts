@@ -14,15 +14,11 @@ class GenresRepository implements IGenresRepository {
     this.ormRepository = getRepository(Genre);
   }
 
-  public async findGenreById({
-    id,
-  }: {
-    id: string;
-  }): Promise<Genre | undefined> {
-    const findGenre = await this.ormRepository.findOne({
+  public async findById({ id }: { id: string }): Promise<Genre | undefined> {
+    const find_genre = await this.ormRepository.findOne({
       where: { id },
     });
-    return findGenre;
+    return find_genre;
   }
 
   public async list({
@@ -38,6 +34,7 @@ class GenresRepository implements IGenresRepository {
       order: { name: order ? EOrder.DESC : EOrder.ASC },
       take,
       skip,
+      relations: ['videos'],
     });
     return {
       total,
@@ -58,26 +55,35 @@ class GenresRepository implements IGenresRepository {
     id,
     name,
   }: IUpdateGenreDTO): Promise<Genre | undefined> {
-    const findGenre = await this.ormRepository.findOne({
+    const find_genre = await this.ormRepository.findOne({
       where: { id },
     });
-    if (!findGenre) {
+    if (!find_genre) {
       throw new AppError('Genre dont exist', 400);
     }
 
-    await this.ormRepository.save({ ...findGenre, name });
-    return { ...findGenre, name };
+    await this.ormRepository.save({ ...find_genre, name });
+    return { ...find_genre, name };
   }
 
   public async delete({ id }: { id: string }): Promise<Genre | undefined> {
-    const findGenre = await this.ormRepository.findOne({
+    const find_genre = await this.ormRepository.findOne({
       where: { id },
     });
-    if (!findGenre) {
+    if (!find_genre) {
       throw new AppError('Genre dont exist', 400);
     }
-    await this.ormRepository.remove(findGenre);
-    return findGenre;
+    await this.ormRepository.remove(find_genre);
+    return find_genre;
+  }
+
+  public async findByName({
+    name,
+  }: {
+    name: string;
+  }): Promise<Genre | undefined> {
+    const find_genre = await this.ormRepository.findOne({ where: { name } });
+    return find_genre;
   }
 }
 export default GenresRepository;

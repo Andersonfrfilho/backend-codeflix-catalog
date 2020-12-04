@@ -9,5 +9,6 @@ export default interface IGenresRepository {
   delete({ id }: { id: string }): Promise<Genre | undefined>;
   update(data: IUpdateGenreDTO): Promise<Genre | undefined>;
   list(data: IPaginationDTO): Promise<IListUsersDTO>;
-  findGenreById({ id }: { id: string }): Promise<Genre | undefined>;
+  findById({ id }: { id: string }): Promise<Genre | undefined>;
+  findByName({ name }: { name: string }): Promise<Genre | undefined>;
 }

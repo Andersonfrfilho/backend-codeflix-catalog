@@ -1,3 +1,4 @@
+import Video from '@modules/videos/infra/typeorm/entities/Video';
 import {
   Column,
   CreateDateColumn,
@@ -5,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 @Entity('categories')
@@ -20,6 +23,14 @@ class Category {
 
   @Column()
   is_active: boolean;
+
+  @ManyToMany(() => Video)
+  @JoinTable({
+    name: 'category_video',
+    joinColumn: { name: 'category_id' },
+    inverseJoinColumn: { name: 'video_id' },
+  })
+  videos?: Video[];
 
   @CreateDateColumn()
   created_at?: Date;

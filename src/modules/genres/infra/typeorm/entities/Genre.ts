@@ -5,10 +5,13 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  JoinTable,
+  ManyToMany,
 } from 'typeorm';
+import Video from '@modules/videos/infra/typeorm/entities/Video';
 
 @Entity('genres')
-class Image {
+class Genre {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -17,6 +20,14 @@ class Image {
 
   @Column()
   is_active: boolean;
+
+  @ManyToMany(() => Video)
+  @JoinTable({
+    name: 'genre_video',
+    joinColumn: { name: 'genre_id' },
+    inverseJoinColumn: { name: 'video_id' },
+  })
+  videos?: Video[];
 
   @CreateDateColumn()
   created_at?: Date;
@@ -27,4 +38,4 @@ class Image {
   @DeleteDateColumn()
   deleted_at?: Date;
 }
-export default Image;
+export default Genre;

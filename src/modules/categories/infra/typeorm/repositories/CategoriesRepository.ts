@@ -14,11 +14,16 @@ class CategoriesRepository implements ICategoriesRepository {
     this.ormRepository = getRepository(Category);
   }
 
-  public async findCategoryById({
-    id,
+  public async findByName({
+    name,
   }: {
-    id: string;
+    name: string;
   }): Promise<Category | undefined> {
+    const findCategory = await this.ormRepository.findOne({ where: { name } });
+    return findCategory;
+  }
+
+  public async findById({ id }: { id: string }): Promise<Category | undefined> {
     const findCategory = await this.ormRepository.findOne({
       where: { id },
     });
@@ -38,6 +43,7 @@ class CategoriesRepository implements ICategoriesRepository {
       order: { name: order ? EOrder.DESC : EOrder.ASC },
       take,
       skip,
+      relations: ['videos'],
     });
     return {
       total,

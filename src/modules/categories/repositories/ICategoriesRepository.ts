@@ -9,5 +9,6 @@ export default interface ICategorysRepository {
   delete({ id }: { id: string }): Promise<Category | undefined>;
   update(data: IUpdateCategoryDTO): Promise<Category | undefined>;
   list(data: IPaginationDTO): Promise<IListUsersDTO>;
-  findCategoryById({ id }: { id: string }): Promise<Category | undefined>;
+  findById({ id }: { id: string }): Promise<Category | undefined>;
+  findByName({ name }: { name: string }): Promise<Category | undefined>;
 }

@@ -5,7 +5,7 @@ import ICastMembersRepository from '@modules/cast_members/repositories/ICastMemb
 import ICreateCastMemberDTO from '@modules/cast_members/dtos/ICreateCastMemberDTO';
 
 @injectable()
-class CreatePostService {
+class CreateCastMemberService {
   constructor(
     @inject('CastMembersRepository')
     private castMembersRepository: ICastMembersRepository,
@@ -23,4 +23,4 @@ class CreatePostService {
     return cast_member;
   }
 }
-export default CreatePostService;
+export default CreateCastMemberService;
